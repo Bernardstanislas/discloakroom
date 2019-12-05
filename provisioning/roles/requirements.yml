@@ -1,0 +1,4 @@
+- src: https://github.com/morgangraphics/ansible-role-nvm
+- src: mrjk.dumpall
+  version: dev
+  name: dumpall
