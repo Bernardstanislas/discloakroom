@@ -1,0 +1,50 @@
+---
+- name: Create temporary directory
+  file:
+    path: /tmp/node
+    state: directory
+
+- name: Download the Nodejs files
+  unarchive:
+    src: https://nodejs.org/dist/latest-v10.x/node-v10.17.0-linux-armv6l.tar.xz
+    dest: /tmp/node
+    remote_src: yes
+
+- name: Check if previous installation exists
+  stat: path=/usr/local/nodejs
+  register: previous_installation
+
+- name: Remove previous installation
+  become: yes
+  file:
+    path: /usr/local/nodejs
+    state: absent
+  when: previous_installation.stat.exists
+
+- name: Create target directory
+  become: yes
+  file:
+    path: /usr/local/nodejs
+    state: directory
+
+- name: List files to copy
+  shell: ls /tmp/node/node-v10.17.0-linux-armv6l
+  register: files_to_copy
+
+- name: Copy extracted files
+  become: yes
+  copy:
+    src: "/tmp/node/node-v10.17.0-linux-armv6l/{{ item }}"
+    dest: /usr/local/nodejs
+    remote_src: yes
+  with_items: "{{ files_to_copy.stdout_lines }}"
+
+- name: Remove temporary files
+  file:
+    path: /tmp/node
+    state: absent
+
+- name: Add binaries to $PATH
+  lineinfile:
+    path: /home/pi/.bashrc
+    line: export PATH=$PATH:/usr/local/nodejs/bin
