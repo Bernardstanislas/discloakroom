@@ -1,29 +1,18 @@
 // Inspired by https://github.com/MattVador/node-red-contrib-play-sound/blob/master/node-red-contrib-play-sound.js
 
 // TODO: Type correctly the lib
-const player = require("play-sound")({});
-import rpio from "rpio";
+import { Gpio } from "onoff";
 
-let audio = player.play("sample.mp3");
+const LEFT_DOOR = 17;
+const leftDoor = new Gpio(LEFT_DOOR, "in", "both", { debounceTimeout: 100 });
 
-const pause = () => audio.kill("SIGSTOP");
+const RIGHT_DOOR = 27;
+const rightDoor = new Gpio(RIGHT_DOOR, "in", "both", { debounceTimeout: 100 });
 
-const resume = () => audio.kill("SIGCONT");
+leftDoor.watch((err, value) => {
+  console.log("Left door changed, it is now: ", value);
+});
 
-const LEFT_DOOR = 11;
-
-rpio.open(LEFT_DOOR, rpio.INPUT, rpio.PULL_UP);
-
-const onLeftDoorChange = (pin: number) => {
-  rpio.msleep(20);
-
-  const state = rpio.read(pin);
-
-  if (state) {
-    resume();
-  } else {
-    pause();
-  }
-};
-
-rpio.poll(LEFT_DOOR, onLeftDoorChange, rpio.POLL_BOTH);
+rightDoor.watch((err, value) => {
+  console.log("Right door changed, it is now: ", value);
+});
