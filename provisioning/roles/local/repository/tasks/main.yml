@@ -1,0 +1,10 @@
+---
+- name: Clone the git repository
+  git:
+    repo: "git@github.com:Bernardstanislas/discloakroom.git"
+    dest: /home/pi/discloakroom
+
+- name: Install the node dependencies
+  command:
+    cmd: npm install
+    chdir: /home/pi/discloakroom

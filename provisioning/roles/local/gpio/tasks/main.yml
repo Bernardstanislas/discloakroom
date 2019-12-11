@@ -1,0 +1,31 @@
+---
+# Based on https://www.npmjs.com/package/rpio needs
+
+- name: Create rules file
+  become: yes
+  file:
+    path: /etc/udev/rules.d/20-gpiomem.rules
+    owner: root
+    group: root
+    mode: "0644"
+    state: touch
+
+- name: Enable /dev/gpiomem access
+  become: yes
+  lineinfile:
+    path: /etc/udev/rules.d/20-gpiomem.rules
+    line: SUBSYSTEM=="bcm2835-gpiomem", KERNEL=="gpiomem", GROUP="gpio", MODE="0660"
+
+- name: Disable GPIO interrupts
+  become: yes
+  lineinfile:
+    path: /boot/config.txt
+    insertafter: ".*dtoverlay.*"
+    line: dtoverlay=gpio-no-irq
+
+- name: Add the user to the gpio group
+  become: yes
+  user:
+    append: yes
+    group: gpio
+    name: pi
