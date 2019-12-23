@@ -1,9 +1,10 @@
 // Inspired by https://github.com/MattVador/node-red-contrib-play-sound/blob/master/node-red-contrib-play-sound.js
 
-// TODO: Type correctly the lib
 import { Gpio } from "pigpio";
 import debounce from "lodash/debounce";
 import Omx from "omxplayer-pi";
+
+const ACTIONS_DEBOUNCE_DELAY = 200;
 
 const LEFT_DOOR = 17;
 const leftDoor = new Gpio(LEFT_DOOR, {
@@ -23,6 +24,11 @@ const rightDoor = new Gpio(RIGHT_DOOR, {
 
 rightDoor.glitchFilter(50_000);
 
+const LIGHT = 22;
+const light = new Gpio(LIGHT, {
+  mode: Gpio.OUTPUT
+});
+
 const player = Omx("get-down-on-it.mp3", "local", true);
 
 let playing = true;
@@ -32,7 +38,7 @@ const pause = debounce(
     playing && player.pause();
     playing = false;
   },
-  500,
+  ACTIONS_DEBOUNCE_DELAY,
   { leading: true, trailing: false }
 );
 const resume = debounce(
@@ -40,7 +46,23 @@ const resume = debounce(
     !playing && player.play();
     playing = true;
   },
-  500,
+  ACTIONS_DEBOUNCE_DELAY,
+  { leading: true, trailing: false }
+);
+
+const turnLightOn = debounce(
+  () => {
+    light.digitalWrite(1);
+  },
+  ACTIONS_DEBOUNCE_DELAY,
+  { leading: true, trailing: false }
+);
+
+const turnLightOff = debounce(
+  () => {
+    light.digitalWrite(0);
+  },
+  ACTIONS_DEBOUNCE_DELAY,
   { leading: true, trailing: false }
 );
 
@@ -63,10 +85,12 @@ rightDoor.on("alert", onDoorsChange);
 
 const onDoorsClosed = () => {
   pause();
+  turnLightOff();
 };
 
 const onDoorsOpened = () => {
   resume();
+  turnLightOn();
 };
 
 console.log("Started");
