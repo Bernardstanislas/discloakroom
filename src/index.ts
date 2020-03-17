@@ -2,7 +2,7 @@
 
 import { Gpio } from "pigpio";
 import debounce from "lodash/debounce";
-import Omx from "omxplayer-pi";
+import { MPC } from "mpc-js";
 
 const ACTIONS_DEBOUNCE_DELAY = 200;
 
@@ -29,13 +29,14 @@ const light = new Gpio(LIGHT, {
   mode: Gpio.OUTPUT
 });
 
-const player = Omx("get-down-on-it.mp3", "local", true);
+const player = new MPC();
+player.connectUnixSocket("/run/mpd/socket");
 
 let playing = true;
 
 const pause = debounce(
   () => {
-    playing && player.pause();
+    playing && player.playback.pause();
     playing = false;
   },
   ACTIONS_DEBOUNCE_DELAY,
@@ -43,7 +44,7 @@ const pause = debounce(
 );
 const resume = debounce(
   () => {
-    !playing && player.play();
+    !playing && player.playback.play();
     playing = true;
   },
   ACTIONS_DEBOUNCE_DELAY,
@@ -97,7 +98,6 @@ console.log("Started");
 
 process.on("SIGINT", function() {
   console.log("Quitting player");
-  player.quit();
   leftDoor.off("alert", onDoorsChange);
   rightDoor.off("alert", onDoorsChange);
   process.exit();

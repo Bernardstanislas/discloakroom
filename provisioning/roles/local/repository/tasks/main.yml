@@ -1,7 +1,7 @@
 ---
 - name: Clone the git repository
   git:
-    repo: "git@github.com:Bernardstanislas/discloakroom.git"
+    repo: https://github.com/Bernardstanislas/discloakroom.git
     dest: /home/pi/discloakroom
 
 - name: Install the node dependencies
