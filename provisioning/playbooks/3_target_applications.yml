@@ -1,3 +1,4 @@
 - hosts: all
   roles:
     - role: repository
+    - role: app-service

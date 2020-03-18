@@ -1,0 +1,24 @@
+---
+- name: Install mpd
+  become: yes
+  apt:
+    name: mpd
+    state: latest
+
+- name: Install mpc
+  become: yes
+  apt:
+    name: mpc
+    state: latest
+
+- name: Install make
+  become: yes
+  apt:
+    name: make
+    state: latest
+
+- name: Install g++
+  become: yes
+  apt:
+    name: g++
+    state: latest

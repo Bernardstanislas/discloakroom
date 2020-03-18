@@ -1,0 +1,17 @@
+[Unit]
+Description=Discloakroom
+After=network-online.target
+
+[Service]
+Type=simple
+
+User=root
+Group=root
+
+ExecStart=/home/ubuntu/discloakroom/node_modules/.bin/ts-node /home/ubuntu/discloakroom/src/index.ts
+
+Restart=on-failure
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target

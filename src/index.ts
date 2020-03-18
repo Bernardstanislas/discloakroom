@@ -30,7 +30,7 @@ const light = new Gpio(LIGHT, {
 });
 
 const player = new MPC();
-player.connectUnixSocket("/run/mpd/socket");
+player.connectTCP("localhost", 6600);
 
 let playing = true;
 

@@ -1,7 +1,7 @@
 ---
 # Based on https://www.npmjs.com/package/rpio needs
 
-- name: Create rules file
+- name: Enable sound
   become: yes
   file:
     path: /etc/udev/rules.d/20-gpiomem.rules
@@ -10,8 +10,8 @@
     mode: "0644"
     state: touch
 
-- name: Enable /dev/gpiomem access
+- name: Enable sound
   become: yes
   lineinfile:
-    path: /etc/udev/rules.d/20-gpiomem.rules
-    line: SUBSYSTEM=="bcm2835-gpiomem", KERNEL=="gpiomem", GROUP="gpio", MODE="0660"
+    path: /boot/firmware/usercfg.txt
+    line: "dtparam=audio=on"

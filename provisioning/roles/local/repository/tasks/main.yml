@@ -2,9 +2,9 @@
 - name: Clone the git repository
   git:
     repo: https://github.com/Bernardstanislas/discloakroom.git
-    dest: /home/pi/discloakroom
+    dest: /home/ubuntu/discloakroom
 
 - name: Install the node dependencies
   command:
     cmd: npm install
-    chdir: /home/pi/discloakroom
+    chdir: /home/ubuntu/discloakroom
