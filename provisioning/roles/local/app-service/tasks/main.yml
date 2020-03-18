@@ -1,5 +1,6 @@
 ---
 - name: create systemd service
+  become: yes
   template:
     owner: root
     group: root
@@ -8,6 +9,7 @@
     dest: /etc/systemd/system/discloakroom.service
 
 - name: restart discloakroom
+  become: yes
   service:
     name: discloakroom
     enabled: yes
