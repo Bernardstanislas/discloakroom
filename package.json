@@ -13,7 +13,7 @@
     "@types/onoff": "^4.1.0",
     "@types/pigpio": "^1.2.1",
     "jest": "^24.9.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "mpc-js": "^1.2.1",
     "omxplayer-pi": "^1.0.17",
     "onoff": "^5.0.0",
